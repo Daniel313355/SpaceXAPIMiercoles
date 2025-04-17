@@ -9,11 +9,11 @@ function Favoritos({ favoritos })  {
     <ul>
       {favoritos.map((tripulacion) => (
         <li key={tripulacion.id}>
-          <img
-            src={`https://i.imgur.com/${tripulacion.id}.png`}
-            alt={tripulacion.name}
-            width="50"
-          />
+         <img
+          src={tripulacion.image}
+          alt={tripulacion.name}
+          width="50"
+        />
           <p>{tripulacion.name}</p>
         </li>
       ))}

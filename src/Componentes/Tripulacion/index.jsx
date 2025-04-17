@@ -12,38 +12,38 @@ function Tripulacion({ agregarAFavoritos }) {
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
-        if (tipoSeleccionado === 'Todos') {
-          const res = await fetch('https://api.spacexdata.com/v4/crew')
-          const json = await res.json()
-          setData(json) // ✅ usamos el array directamente
-        } else {
-          setData([]) // 👈 puedes implementar filtros personalizados más adelante
-        }
+        const res = await fetch('https://api.spacexdata.com/v4/crew')
+        const json = await res.json()
+        setData(json)
       } catch (error) {
         console.error('Error al obtener datos de tripulación:', error)
       }
     }
 
     obtenerDatos()
-  }, [tipoSeleccionado])
+  }, [])
+
+  // 👉 Generamos filtros dinámicamente
+  const agencias = [...new Set(data.map((item) => item.agency))]
+  const estados = [...new Set(data.map((item) => item.status))]
+  const tipos = ['Todos', ...agencias, ...estados]
 
   const handleTipoChange = (tipo) => {
     setTipoSeleccionado(tipo)
   }
 
-  let resultados = data
-
-  if (busqueda.length >= 3 && isNaN(busqueda)) {
-    resultados = data.filter((tripulacion) =>
+  // 👉 Aplicamos búsqueda y filtro
+  let resultados = data.filter((tripulacion) => {
+    const coincideBusqueda =
+      busqueda.length < 3 ||
       tripulacion.name.toLowerCase().includes(busqueda.toLowerCase())
-    )
-  }
+    const coincideFiltro =
+      tipoSeleccionado === 'Todos' ||
+      tripulacion.agency === tipoSeleccionado ||
+      tripulacion.status === tipoSeleccionado
 
-  if (!isNaN(busqueda)) {
-    resultados = data.filter((tripulacion) =>
-      tripulacion.url?.includes('/' + busqueda)
-    )
-  }
+    return coincideBusqueda && coincideFiltro
+  })
 
   return (
     <>
@@ -55,47 +55,46 @@ function Tripulacion({ agregarAFavoritos }) {
         className="c-buscador"
       />
 
-      <Filtro onTipoChange={handleTipoChange} />
+      <Filtro onTipoChange={handleTipoChange} tipos={tipos} />
 
       <section className="c-lista">
         {Array.isArray(resultados) &&
-          resultados.map((tripulacion, index) => {
-            const id = tripulacion?.url?.split('/')[6]
-
-            return (
-              <div
-                className="c-lista-tripulacion"
-                onClick={() => navigate(`/Descripcion/${tripulacion.name}`)}
-                key={index}
+          resultados.map((tripulacion, index) => (
+            <div
+              className="c-lista-tripulacion"
+              onClick={() => navigate(`/Descripcion/${tripulacion.id}`)}
+              key={index}
+            >
+              <img
+                src={tripulacion.image}
+                alt={`tripulante ${tripulacion.name}`}
+                width="auto"
+                height="60"
+                loading="lazy"
+              />
+              <p>{tripulacion.name}</p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  agregarAFavoritos({
+                    name: tripulacion.name,
+                    id: tripulacion.id, // este es el ID correcto, mejor usar tripulacion.id directamente
+                    image: tripulacion.image // agregamos la imagen
+                  });                  
+                }}
               >
-                <p>{id}</p>
-                <img
-                  src={`https://i.imgur.com/${id}.png`}
-                  alt={`tripulacion ${tripulacion.name}`}
-                  width="auto"
-                  height="60"
-                  loading="lazy"
-                />
-                <p>{tripulacion.name}</p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    agregarAFavoritos({ name: tripulacion.name, id })
-                  }}
-                >
-                  Agregar a Favoritos
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigate(`/Descripcion/${tripulacion.name}`)
-                  }}
-                >
-                  Ver Detalle
-                </button>
-              </div>
-            )
-          })}
+                Agregar a Favoritos
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/Descripcion/${tripulacion.id}`)
+                }}
+              >
+                Ver Detalle
+              </button>
+            </div>
+          ))}
       </section>
     </>
   )
