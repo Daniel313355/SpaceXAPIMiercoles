@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react'
 import './style.css'
 import { useNavigate } from 'react-router-dom';
-import Filtros from '../Filtros';
+import Filtro from '../Filtros';
 
 function Tripulacion({ agregarAFavoritos }) {
 
