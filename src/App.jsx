@@ -1,35 +1,34 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import Capsulas from './Componentes/Capsulas'
+import Cohetes from './Componentes/Cohetes'
+import Favoritos from './Componentes/Favoritos'
+import Menu from './Componentes/Menu'
+import Nucleos from './Componentes/Nucleos'
+import Satelites from './Componentes/Satelites'
+import Tripulacion from './Componentes/Tripulacion'
 
 function App() {
-  const [count, setCount] = useState(0)
+const [favoritos, setFavoritos] = useState([]);
 
+  const agregarAFavoritos = (tripulacion) => {
+    if (!favoritos.some((fav) => fav.name === tripulacion.name)) {
+      setFavoritos((prev) => [...prev, tripulacion]);
+    }
+  };
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Menu />
+      <Routes>
+        <Route path="/" element={<Capsulas />} />
+        <Route path="/Cohetes/:name" element={<Cohetes />} />
+        <Route path="/Favoritos" element={<Favoritos favoritos={favoritos} />} />
+        <Route path="/Nucleos" element={<Nucleos />} />
+        <Route path="/Satelites" element={<Satelites />} /> 
+        <Route path="/Tripulacion" element={<Tripulacion agregarAFavoritos={agregarAFavoritos} />} />
+      </Routes>
+    </Router>
   )
 }
-
 export default App
