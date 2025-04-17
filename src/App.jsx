@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Capsulas from './Componentes/Capsulas'
-import Cohetes from './Componentes/Cohetes'
+import Descripcion from './Componentes/Descripcion'
 import Favoritos from './Componentes/Favoritos'
 import Menu from './Componentes/Menu'
 import Nucleos from './Componentes/Nucleos'
@@ -22,7 +22,7 @@ const [favoritos, setFavoritos] = useState([]);
       <Menu />
       <Routes>
         <Route path="/Capsulas" element={<Capsulas />} />
-        <Route path="/Cohetes/:name" element={<Cohetes />} />
+        <Route path="/Descripcion/:name" element={<Descripcion />} />
         <Route path="/Favoritos" element={<Favoritos favoritos={favoritos} />} />
         <Route path="/Nucleos" element={<Nucleos />} />
         <Route path="/Satelites" element={<Satelites />} /> 
