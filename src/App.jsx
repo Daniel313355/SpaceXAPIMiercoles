@@ -21,7 +21,7 @@ const [favoritos, setFavoritos] = useState([]);
     <Router>
       <Menu />
       <Routes>
-        <Route path="/" element={<Capsulas />} />
+        <Route path="/Capsulas" element={<Capsulas />} />
         <Route path="/Cohetes/:name" element={<Cohetes />} />
         <Route path="/Favoritos" element={<Favoritos favoritos={favoritos} />} />
         <Route path="/Nucleos" element={<Nucleos />} />
