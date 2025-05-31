@@ -1,6 +1,7 @@
 // src/pages/Favorites.jsx (o cualquier componente relacionado)
 import { useEffect, useState } from 'react'
-import { supabase } from '../supabaseClient' // ajusta la ruta si es necesario
+import { supabase } from "../../supabaseClient"
+ // ajusta la ruta si es necesario
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([])
